@@ -1,0 +1,514 @@
+*&---------------------------------------------------------------------*
+*& Report zzap_unit_test_zcx_return2_ap
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zz_zcx_return2_unit_test.
+
+CLASS unit_test DEFINITION FOR TESTING
+  RISK LEVEL HARMLESS.
+
+  PRIVATE SECTION.
+
+    METHODS get_test_data_bapiret2_1_struc
+      RETURNING VALUE(rs_exp_bapiret2) TYPE bapiret2.
+    METHODS get_test_data_bapiret2_1_tab
+      RETURNING VALUE(rt_exp_bapiret2) TYPE bapiret2_t.
+    METHODS get_bapiret2_00_059_struc
+      RETURNING VALUE(rs_exp_bapiret2) TYPE bapiret2.
+    METHODS get_bapiret2_00_060_struc
+      IMPORTING iv_type                TYPE bapi_mtype
+      RETURNING VALUE(rs_exp_bapiret2) TYPE bapiret2.
+    METHODS get_test_data_bapiret2_2_tab
+      RETURNING VALUE(rt_exp_bapiret2) TYPE bapiret2_t.
+    METHODS get_test_data_bapiret2_3_tab
+      RETURNING VALUE(rt_exp_bapiret2) TYPE bapiret2_t.
+
+    METHODS sc010_create_system_message      FOR TESTING.
+    METHODS sc020_create_system_message_2    FOR TESTING.
+    METHODS sc030_create_mess_and_text_var   FOR TESTING.
+    METHODS sc040_create_bapireturn_struc    FOR TESTING.
+    METHODS sc050_create_bapireturn_table    FOR TESTING.
+    METHODS sc060_create_by_bapiret1_struc   FOR TESTING.
+    METHODS sc070_create_by_bapiret1_table   FOR TESTING.
+    METHODS sc080_create_by_bapiret2_struc   FOR TESTING.
+    METHODS sc090_create_by_bapiret2_table   FOR TESTING.
+    METHODS sc091_create_by_bapiret2_table   FOR TESTING.
+*CREATE_BY_BDC_TABLE
+    METHODS sc100_create_by_text                   FOR TESTING.
+
+ENDCLASS.
+
+CLASS unit_test IMPLEMENTATION.
+
+  METHOD get_test_data_bapiret2_1_struc.
+
+    rs_exp_bapiret2 = VALUE #(
+        type        = 'E'
+        id          = '00'
+        number      = '058'
+        message     = 'Entry 1 2 3 does not exist in 4 (check entry)'
+        message_v1  = '1'
+        message_v2  = '2'
+        message_v3  = '3'
+        message_v4  = '4'
+    ).
+
+  ENDMETHOD.
+
+  METHOD get_test_data_bapiret2_1_tab.
+
+    DATA(ls_exp_bapiret2) = get_test_data_bapiret2_1_struc(  ).
+
+    APPEND ls_exp_bapiret2 TO rt_exp_bapiret2.
+
+  ENDMETHOD.
+
+  METHOD get_bapiret2_00_059_struc.
+
+    rs_exp_bapiret2 = VALUE #(
+        type        = 'E'
+        id          = '00'
+        number      = '059'
+        message     = ''
+        message_v1  = ''
+        message_v2  = ''
+        message_v3  = ''
+        message_v4  = ''
+    ).
+
+    MESSAGE
+      ID     rs_exp_bapiret2-id
+      TYPE   rs_exp_bapiret2-type
+      NUMBER rs_exp_bapiret2-number
+      WITH
+        rs_exp_bapiret2-message_v1
+        rs_exp_bapiret2-message_v2
+        rs_exp_bapiret2-message_v3
+        rs_exp_bapiret2-message_v4
+      INTO rs_exp_bapiret2-message.
+
+  ENDMETHOD.
+
+  METHOD get_bapiret2_00_060_struc.
+
+    rs_exp_bapiret2 = VALUE #(
+        type        = iv_type
+        id          = '00'
+        number      = '060'
+        message     = ''
+        message_v1  = ''
+        message_v2  = ''
+        message_v3  = ''
+        message_v4  = ''
+    ).
+
+    MESSAGE
+      ID     rs_exp_bapiret2-id
+      TYPE   rs_exp_bapiret2-type
+      NUMBER rs_exp_bapiret2-number
+      WITH
+        rs_exp_bapiret2-message_v1
+        rs_exp_bapiret2-message_v2
+        rs_exp_bapiret2-message_v3
+        rs_exp_bapiret2-message_v4
+      INTO rs_exp_bapiret2-message.
+
+  ENDMETHOD.
+
+  METHOD get_test_data_bapiret2_2_tab.
+
+    rt_exp_bapiret2 = get_test_data_bapiret2_1_tab(  ).
+
+    DATA(ls_exp_bapiret2) = get_bapiret2_00_059_struc(  ).
+
+    APPEND ls_exp_bapiret2 TO rt_exp_bapiret2.
+
+  ENDMETHOD.
+
+  METHOD get_test_data_bapiret2_3_tab.
+
+    DATA ls_exp_bapiret2 TYPE bapiret2.
+
+    ls_exp_bapiret2 = get_bapiret2_00_060_struc( 'S' ).
+
+    APPEND ls_exp_bapiret2 TO rt_exp_bapiret2.
+
+
+    ls_exp_bapiret2 = get_test_data_bapiret2_1_struc(  ).
+
+    APPEND ls_exp_bapiret2 TO rt_exp_bapiret2.
+
+
+    ls_exp_bapiret2 = get_bapiret2_00_060_struc( 'I' ).
+
+    APPEND ls_exp_bapiret2 TO rt_exp_bapiret2.
+
+
+    ls_exp_bapiret2 = get_bapiret2_00_060_struc( 'S' ).
+
+    APPEND ls_exp_bapiret2 TO rt_exp_bapiret2.
+
+
+    ls_exp_bapiret2 = get_bapiret2_00_059_struc(  ).
+
+    APPEND ls_exp_bapiret2 TO rt_exp_bapiret2.
+
+
+    ls_exp_bapiret2 = get_bapiret2_00_060_struc( 'S' ).
+
+    APPEND ls_exp_bapiret2 TO rt_exp_bapiret2.
+
+  ENDMETHOD.
+
+  METHOD sc010_create_system_message.
+
+    DATA(lt_exp_bapiret2) = get_test_data_bapiret2_1_tab( ).
+
+    "Entry & & & does not exist in &4 (check entry)
+    MESSAGE e058(00)
+      WITH '1' '2' '3' '4'
+      INTO DATA(lv_dummy).
+
+    DATA(lx_return) = zcx_return2=>create_by_system_message( ).
+
+    DATA(lt_act_bapiret2) = lx_return->get_bapiret2_table( ).
+
+    cl_abap_unit_assert=>assert_equals(
+      act = lt_act_bapiret2
+      exp = lt_exp_bapiret2 ).
+
+    "Add message: The input value is too big (maximum 255)
+    MESSAGE e059(00)
+      INTO DATA(lv_dummy_2).
+
+    lx_return->add_system_message( ).
+
+    lt_act_bapiret2 = lx_return->get_bapiret2_table( ).
+
+    DATA(ls_exp_bapiret2) = get_bapiret2_00_059_struc( ).
+    APPEND ls_exp_bapiret2 TO lt_exp_bapiret2.
+
+    cl_abap_unit_assert=>assert_equals(
+      act = lt_act_bapiret2
+      exp = lt_exp_bapiret2 ).
+
+  ENDMETHOD.
+
+  METHOD sc020_create_system_message_2.
+
+    MESSAGE i058(00)
+      WITH '1' '2' '3' '4'
+      INTO DATA(lv_dummy).
+
+    DATA(lx_return) = zcx_return2=>create_by_system_message( ).
+
+    cl_abap_unit_assert=>assert_not_bound( lx_return ).
+
+    MESSAGE s058(00)
+      WITH '1' '2' '3' '4'
+      INTO DATA(lv_dummy2).
+
+    lx_return = zcx_return2=>create_by_system_message( ).
+
+    cl_abap_unit_assert=>assert_not_bound( lx_return ).
+
+  ENDMETHOD.
+
+  METHOD sc030_create_mess_and_text_var.
+
+    "Expected data
+    DATA(ls_exp_bapiret2) = VALUE bapiret2(
+        type        = 'E'
+        id          = '00'
+        number      = '081'
+        message     = 'Entry 1 2 3 does not exist in 4 (check entry)'
+        message_v1  = 'V1:45678901234567890123456789012345678901234567890'
+        message_v2  = 'V2:45678901234567890123456789012345678901234567890'
+        message_v3  = 'V3:45678901234567890123456789012345678901234567890'
+        message_v4  = 'V4:45678901234567890123456789012345678901234567890'
+    ).
+
+    MESSAGE
+      ID     ls_exp_bapiret2-id
+      TYPE   ls_exp_bapiret2-type
+      NUMBER ls_exp_bapiret2-number
+      WITH
+        ls_exp_bapiret2-message_v1
+        ls_exp_bapiret2-message_v2
+        ls_exp_bapiret2-message_v3
+        ls_exp_bapiret2-message_v4
+      INTO ls_exp_bapiret2-message.
+
+    DATA lt_exp_bapiret2 TYPE bapiret2_t.
+
+    APPEND ls_exp_bapiret2 TO lt_exp_bapiret2.
+
+    "Call data
+    DATA lv_char_200 TYPE char200.
+
+    lv_char_200 =
+      ls_exp_bapiret2-message_v1 &&
+      ls_exp_bapiret2-message_v2 &&
+      ls_exp_bapiret2-message_v3 &&
+      ls_exp_bapiret2-message_v4.
+
+    DATA(lx_return) = zcx_return2=>create_by_message_and_text_var(
+      iv_type           = ls_exp_bapiret2-type
+      iv_id             = ls_exp_bapiret2-id
+      iv_number         = ls_exp_bapiret2-number
+      iv_text_variable  = lv_char_200 ).
+
+    "Actual data
+    DATA(lt_act_bapiret2) = lx_return->get_bapiret2_table( ).
+
+    cl_abap_unit_assert=>assert_equals(
+      act = lt_act_bapiret2
+      exp = lt_exp_bapiret2 ).
+
+  ENDMETHOD.
+
+  METHOD sc040_create_bapireturn_struc.
+
+    DATA(lt_exp_bapiret2) = get_test_data_bapiret2_1_tab( ).
+    DATA(ls_exp_bapiret2) = lt_exp_bapiret2[ 1 ].
+
+    DATA ls_bapireturn TYPE bapireturn.
+
+    ls_bapireturn = VALUE #(
+        type         = ls_exp_bapiret2-type
+        code         = ls_exp_bapiret2-id && ls_exp_bapiret2-number
+        message      = ls_exp_bapiret2-message
+        log_no       = ls_exp_bapiret2-log_no
+        log_msg_no   = ls_exp_bapiret2-log_msg_no
+        message_v1   = ls_exp_bapiret2-message_v1
+        message_v2   = ls_exp_bapiret2-message_v2
+        message_v3   = ls_exp_bapiret2-message_v3
+        message_v4   = ls_exp_bapiret2-message_v4
+    ).
+
+    DATA(lx_return) = zcx_return2=>create_by_bapireturn_struc( ls_bapireturn ).
+
+    DATA(lt_act_bapiret2) = lx_return->get_bapiret2_table( ).
+
+    cl_abap_unit_assert=>assert_equals(
+      act = lt_act_bapiret2
+      exp = lt_exp_bapiret2 ).
+
+  ENDMETHOD.
+
+  METHOD sc050_create_bapireturn_table.
+
+    DATA(lt_exp_bapiret2) = get_test_data_bapiret2_2_tab( ).
+
+    DATA lt_bapireturn TYPE STANDARD TABLE OF bapireturn.
+
+    LOOP AT lt_exp_bapiret2
+      ASSIGNING FIELD-SYMBOL(<ls_exp_bapiret2>).
+
+      DATA ls_bapireturn TYPE bapireturn.
+
+      ls_bapireturn = VALUE #(
+          type         = <ls_exp_bapiret2>-type
+          code         = <ls_exp_bapiret2>-id && <ls_exp_bapiret2>-number
+          message      = <ls_exp_bapiret2>-message
+          log_no       = <ls_exp_bapiret2>-log_no
+          log_msg_no   = <ls_exp_bapiret2>-log_msg_no
+          message_v1   = <ls_exp_bapiret2>-message_v1
+          message_v2   = <ls_exp_bapiret2>-message_v2
+          message_v3   = <ls_exp_bapiret2>-message_v3
+          message_v4   = <ls_exp_bapiret2>-message_v4
+      ).
+
+      APPEND ls_bapireturn TO lt_bapireturn.
+
+    ENDLOOP.
+
+    DATA(lx_return) = zcx_return2=>create_by_bapireturn_table( lt_bapireturn ).
+
+    DATA(lt_act_bapiret2) = lx_return->get_bapiret2_table( ).
+
+    cl_abap_unit_assert=>assert_equals(
+      act = lt_act_bapiret2
+      exp = lt_exp_bapiret2 ).
+
+
+    DATA(ls_act_bapiret2) = lx_return->get_bapiret2_struc( ).
+    DATA(ls_exp_bapiret2) = lt_exp_bapiret2[ 1 ].
+
+    cl_abap_unit_assert=>assert_equals(
+      act = ls_act_bapiret2
+      exp = ls_exp_bapiret2 ).
+
+  ENDMETHOD.
+
+  METHOD sc060_create_by_bapiret1_struc.
+
+    DATA(lt_exp_bapiret2) = get_test_data_bapiret2_1_tab( ).
+    DATA(ls_exp_bapiret2) = lt_exp_bapiret2[ 1 ].
+
+    DATA ls_bapiret1 TYPE bapiret1.
+
+    ls_bapiret1 = VALUE #(
+        type         = ls_exp_bapiret2-type
+        id           = ls_exp_bapiret2-id
+        number       = ls_exp_bapiret2-number
+        message      = ls_exp_bapiret2-message
+        log_no       = ls_exp_bapiret2-log_no
+        log_msg_no   = ls_exp_bapiret2-log_msg_no
+        message_v1   = ls_exp_bapiret2-message_v1
+        message_v2   = ls_exp_bapiret2-message_v2
+        message_v3   = ls_exp_bapiret2-message_v3
+        message_v4   = ls_exp_bapiret2-message_v4
+    ).
+
+    DATA(lx_return) = zcx_return2=>create_by_bapiret1_struc( ls_bapiret1 ).
+
+    DATA(lt_act_bapiret2) = lx_return->get_bapiret2_table( ).
+
+    cl_abap_unit_assert=>assert_equals(
+      act = lt_act_bapiret2
+      exp = lt_exp_bapiret2 ).
+
+  ENDMETHOD.
+
+  METHOD sc070_create_by_bapiret1_table.
+
+    DATA(lt_exp_bapiret2) = get_test_data_bapiret2_2_tab( ).
+
+    DATA lt_bapiret1 TYPE STANDARD TABLE OF bapiret1.
+
+    LOOP AT lt_exp_bapiret2
+      ASSIGNING FIELD-SYMBOL(<ls_exp_bapiret2>).
+
+      DATA ls_bapiret1 TYPE bapiret1.
+
+      ls_bapiret1 = VALUE #(
+          type         = <ls_exp_bapiret2>-type
+          id           = <ls_exp_bapiret2>-id
+          number       = <ls_exp_bapiret2>-number
+          message      = <ls_exp_bapiret2>-message
+          log_no       = <ls_exp_bapiret2>-log_no
+          log_msg_no   = <ls_exp_bapiret2>-log_msg_no
+          message_v1   = <ls_exp_bapiret2>-message_v1
+          message_v2   = <ls_exp_bapiret2>-message_v2
+          message_v3   = <ls_exp_bapiret2>-message_v3
+          message_v4   = <ls_exp_bapiret2>-message_v4
+      ).
+
+      APPEND ls_bapiret1 TO lt_bapiret1.
+
+    ENDLOOP.
+
+    DATA(lx_return) = zcx_return2=>create_by_bapiret1_table( lt_bapiret1 ).
+
+    DATA(lt_act_bapiret2) = lx_return->get_bapiret2_table( ).
+
+    cl_abap_unit_assert=>assert_equals(
+      act = lt_act_bapiret2
+      exp = lt_exp_bapiret2 ).
+
+
+    DATA(ls_act_bapiret2) = lx_return->get_bapiret2_struc( ).
+    DATA(ls_exp_bapiret2) = lt_exp_bapiret2[ 1 ].
+
+    cl_abap_unit_assert=>assert_equals(
+      act = ls_act_bapiret2
+      exp = ls_exp_bapiret2 ).
+
+  ENDMETHOD.
+
+  METHOD sc080_create_by_bapiret2_struc.
+
+    DATA(lt_exp_bapiret2) = get_test_data_bapiret2_1_tab( ).
+    DATA(ls_exp_bapiret2) = lt_exp_bapiret2[ 1 ].
+
+
+    DATA(lx_return) = zcx_return2=>create_by_bapiret2_struc( ls_exp_bapiret2 ).
+
+    DATA(lt_act_bapiret2) = lx_return->get_bapiret2_table( ).
+
+    cl_abap_unit_assert=>assert_equals(
+      act = lt_act_bapiret2
+      exp = lt_exp_bapiret2 ).
+
+  ENDMETHOD.
+
+  METHOD sc090_create_by_bapiret2_table.
+
+    DATA(lt_exp_bapiret2) = get_test_data_bapiret2_2_tab( ).
+
+    DATA(lx_return) = zcx_return2=>create_by_bapiret2_table( lt_exp_bapiret2 ).
+
+    DATA(lt_act_bapiret2) = lx_return->get_bapiret2_table( ).
+
+    cl_abap_unit_assert=>assert_equals(
+      act = lt_act_bapiret2
+      exp = lt_exp_bapiret2 ).
+
+
+    DATA(ls_act_bapiret2) = lx_return->get_bapiret2_struc( ).
+    DATA(ls_exp_bapiret2) = lt_exp_bapiret2[ 1 ].
+
+    cl_abap_unit_assert=>assert_equals(
+      act = ls_act_bapiret2
+      exp = ls_exp_bapiret2 ).
+
+  ENDMETHOD.
+
+  METHOD sc091_create_by_bapiret2_table.
+
+    DATA(lt_exp_bapiret2) = get_test_data_bapiret2_2_tab( ).
+
+    DATA(lt_data_bapiret2) = get_test_data_bapiret2_3_tab( ).
+
+    DATA(lx_return) = zcx_return2=>create_by_bapiret2_table( lt_data_bapiret2 ).
+    DATA(lt_act_bapiret2) = lx_return->get_bapiret2_table( ).
+
+    cl_abap_unit_assert=>assert_equals(
+      act = lt_act_bapiret2
+      exp = lt_exp_bapiret2 ).
+
+
+    DATA(ls_act_bapiret2) = lx_return->get_bapiret2_struc( ).
+    DATA(ls_exp_bapiret2) = lt_exp_bapiret2[ 1 ].
+
+    cl_abap_unit_assert=>assert_equals(
+      act = ls_act_bapiret2
+      exp = ls_exp_bapiret2 ).
+
+  ENDMETHOD.
+
+  METHOD sc100_create_by_text.
+
+    DATA(lt_exp_bapiret2) = value bapiret2_t(
+      (
+        type        = 'E'
+        id          = ''
+        number      = '000'
+        message     = 'Entry 1 2 3 does not exist in 4 (check entry)'
+        message_v1  = '1'
+        message_v2  = '2'
+        message_v3  = '3'
+        message_v4  = '4'
+      )
+    ).
+
+    DATA(lx_return) = zcx_return2=>create_by_text(
+      iv_type       = 'E'
+      iv_message    = 'Entry &1 &2 &3 does not exist in &4 (check entry)'
+      iv_variable_1 = '1'
+      iv_variable_2 = '2'
+      iv_variable_3 = '3'
+      iv_variable_4 = '4'
+    ).
+
+    DATA(lt_act_bapiret2) = lx_return->get_bapiret2_table( ).
+
+    cl_abap_unit_assert=>assert_equals(
+      act = lt_act_bapiret2
+      exp = lt_exp_bapiret2 ).
+
+  ENDMETHOD.
+
+ENDCLASS.
