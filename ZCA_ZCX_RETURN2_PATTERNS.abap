@@ -1,4 +1,4 @@
-REPORT ZCA_ZCX_RETURN2_PATTERNS MESSAGE-ID 00.
+REPORT zca_zcx_return2_patterns MESSAGE-ID 00.
 
 *    METHODS sc010_create_system_message      FOR TESTING.
 *    METHODS sc020_create_system_message_2    FOR TESTING.
@@ -169,7 +169,7 @@ CLASS zz_zcx_return2_pattern IMPLEMENTATION.
 
       CATCH cx_root INTO DATA(lx_root). "TODO: change exception class
 
-        "<Short error name>: &1 &2 &3 &4
+        "<Short error name>: &1&2&3&4
         MESSAGE e001                    "Todo: change error number
           INTO DATA(lv_dummy).
 
