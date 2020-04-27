@@ -11,4 +11,8 @@ See SAP blog: <todo>
 # ZCA_ZCX_RETURN2_PATTERNS.abap
 This program contains all code patterns (a.k.a snippets or templates) for adding quickly error handling code.
 
+# ZCA_ZCX_RETURN2_UNIT_TEST.abap
+This ABAP program executes the unit tests for class ZCX_RETURN2.
+Start the unit test with Ctrl + Shift + F10.
+
 # ZCX_RETURN.abap -> is the old version. Don't use it.
