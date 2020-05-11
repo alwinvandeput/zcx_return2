@@ -3,166 +3,171 @@ CLASS zcx_return2 DEFINITION
   INHERITING FROM cx_static_check
   CREATE PROTECTED .
 
-PUBLIC SECTION.
+  PUBLIC SECTION.
 
-  TYPES:
-    gtt_bdc_messages  TYPE STANDARD TABLE OF bdcmsgcoll WITH DEFAULT KEY .
-  TYPES:
-    gtt_bapireturn TYPE STANDARD TABLE OF bapireturn WITH DEFAULT KEY .
-  TYPES:
-    BEGIN OF gts_position,
+    TYPES:
+      gtt_bapireturn_t TYPE STANDARD TABLE OF bapireturn WITH DEFAULT KEY .
+    TYPES:
+      gtt_bdc_messages  TYPE STANDARD TABLE OF bdcmsgcoll WITH DEFAULT KEY .
+    TYPES:
+      BEGIN OF gts_position,
         program_name TYPE syrepid,
         include_name TYPE syrepid,
         source_line  TYPE i,
       END OF gts_position .
 
-  METHODS constructor
-    IMPORTING
-      !textid LIKE textid OPTIONAL
-      !previous LIKE previous OPTIONAL
-      !gt_return TYPE bapiret2_t OPTIONAL .
-  CLASS-METHODS create_by_system_message
-    IMPORTING
-      !iv_field_name TYPE bapi_fld OPTIONAL
-    RETURNING
-      VALUE(rx_return) TYPE REF TO zcx_return2 .
-  CLASS-METHODS create_by_message_and_text_var
-    IMPORTING
-      !iv_type TYPE bapi_mtype
-      !iv_id TYPE symsgid
-      !iv_number TYPE symsgno
-      !iv_text_variable TYPE char200
-    RETURNING
-      VALUE(rx_return) TYPE REF TO zcx_return2 .
-  CLASS-METHODS create_by_bapireturn_struc
-    IMPORTING
-      !is_return TYPE bapireturn
-    RETURNING
-      VALUE(rx_return) TYPE REF TO zcx_return2 .
-  CLASS-METHODS create_by_bapireturn_table
-    IMPORTING
-      !it_return TYPE gtt_bapireturn
-      !iv_restartable_ind TYPE abap_bool DEFAULT abap_false
-    RETURNING
-      VALUE(rx_return) TYPE REF TO zcx_return2 .
-  CLASS-METHODS create_by_bapiret1_struc
-    IMPORTING
-      !is_return TYPE bapiret1
-    RETURNING
-      VALUE(rx_return) TYPE REF TO zcx_return2 .
-  CLASS-METHODS create_by_bapiret1_table
-    IMPORTING
-      !it_return TYPE bapiret1_tab
-    RETURNING
-      VALUE(rx_return) TYPE REF TO zcx_return2 .
-  CLASS-METHODS create_by_bapiret2_struc
-    IMPORTING
-      !is_return TYPE bapiret2
-    RETURNING
-      VALUE(rx_return) TYPE REF TO zcx_return2 .
-  CLASS-METHODS create_by_bapiret2_table
-    IMPORTING
-      !it_return TYPE bapiret2_t
-      !iv_restartable_ind TYPE abap_bool DEFAULT abap_false
-    RETURNING
-      VALUE(rx_return) TYPE REF TO zcx_return2 .
-  CLASS-METHODS create_by_bdc_table
-    IMPORTING
-      !it_bdc_messages TYPE gtt_bdc_messages
-      !iv_restartable_ind TYPE abap_bool DEFAULT abap_false
-    RETURNING
-      VALUE(rx_return) TYPE REF TO zcx_return2 .
-  CLASS-METHODS create_by_text
-    IMPORTING
-      !iv_type TYPE bapi_mtype DEFAULT 'E'
-      !iv_message TYPE bapi_msg
-      !iv_variable_1 TYPE symsgv OPTIONAL
-      !iv_variable_2 TYPE symsgv OPTIONAL
-      !iv_variable_3 TYPE symsgv OPTIONAL
-      !iv_variable_4 TYPE symsgv OPTIONAL
-    RETURNING
-      VALUE(rx_return) TYPE REF TO zcx_return2 .
-  METHODS get_bapiret2_struc
-    RETURNING
-      VALUE(rs_bapiret2) TYPE bapiret2 .
-  METHODS get_bapiret2_table
-    RETURNING
-      VALUE(rt_bapiret2) TYPE bapiret2_t .
-  METHODS add_system_message
-    IMPORTING
-      !iv_field_name TYPE bapi_fld OPTIONAL .
-  METHODS add_message_and_text_var
-    IMPORTING
-      !iv_type TYPE bapi_mtype
-      !iv_id TYPE symsgid
-      !iv_number TYPE symsgno
-      !iv_text_variable TYPE char200 .
-  METHODS add_bapireturn_struc
-    IMPORTING
-      !is_bapireturn TYPE bapireturn .
-  METHODS add_bapireturn_table
-    IMPORTING
-      !it_return TYPE gtt_bapireturn .
-  METHODS add_bapiret1_struc
-    IMPORTING
-      !is_return TYPE bapiret1 .
-  METHODS add_bapiret1_table
-    IMPORTING
-      !it_return TYPE bapiret1_tab .
-  METHODS add_bapiret2_struc
-    IMPORTING
-      !is_return TYPE bapiret2 .
-  METHODS add_bapiret2_table
-    IMPORTING
-      !it_return TYPE bapiret2_t .
-  METHODS add_by_text
-    IMPORTING
-      !iv_type TYPE bapi_mtype DEFAULT 'E'
-      !iv_message TYPE bapi_msg
-      !iv_variable_1 TYPE symsgv
-      !iv_variable_2 TYPE symsgv
-      !iv_variable_3 TYPE symsgv
-      !iv_variable_4 TYPE symsgv .
-  METHODS raise_exception
-    RAISING
-      zcx_return2 .
+    METHODS constructor
+      IMPORTING
+        !textid    LIKE textid OPTIONAL
+        !previous  LIKE previous OPTIONAL
+        !gt_return TYPE bapiret2_t OPTIONAL .
+    CLASS-METHODS create_by_system_message
+      IMPORTING
+        !iv_field_name   TYPE bapi_fld OPTIONAL
+      RETURNING
+        VALUE(rx_return) TYPE REF TO zcx_return2 .
+    CLASS-METHODS create_by_message_and_text_var
+      IMPORTING
+        !iv_type          TYPE bapi_mtype
+        !iv_id            TYPE symsgid
+        !iv_number        TYPE symsgno
+        !iv_text_variable TYPE char200
+      RETURNING
+        VALUE(rx_return)  TYPE REF TO zcx_return2 .
+    CLASS-METHODS create_by_bapireturn_struc
+      IMPORTING
+        !is_return       TYPE bapireturn
+      RETURNING
+        VALUE(rx_return) TYPE REF TO zcx_return2 .
+    CLASS-METHODS create_by_bapireturn_table
+      IMPORTING
+        !it_return          TYPE gtt_bapireturn_t
+        !iv_restartable_ind TYPE abap_bool DEFAULT abap_false
+      RETURNING
+        VALUE(rx_return)    TYPE REF TO zcx_return2 .
+    CLASS-METHODS create_by_bapiret1_struc
+      IMPORTING
+        !is_return       TYPE bapiret1
+      RETURNING
+        VALUE(rx_return) TYPE REF TO zcx_return2 .
+    CLASS-METHODS create_by_bapiret1_table
+      IMPORTING
+        !it_return       TYPE bapiret1_tab
+      RETURNING
+        VALUE(rx_return) TYPE REF TO zcx_return2 .
+    CLASS-METHODS create_by_bapiret2_struc
+      IMPORTING
+        !is_return       TYPE bapiret2
+      RETURNING
+        VALUE(rx_return) TYPE REF TO zcx_return2 .
+    CLASS-METHODS create_by_bapiret2_table
+      IMPORTING
+        !it_return          TYPE bapiret2_t
+        !iv_restartable_ind TYPE abap_bool DEFAULT abap_false
+      RETURNING
+        VALUE(rx_return)    TYPE REF TO zcx_return2 .
+    CLASS-METHODS create_by_exception_object
+      IMPORTING
+        !ir_exception_object TYPE REF TO cx_root
+      RETURNING
+        VALUE(rx_return)     TYPE REF TO zcx_return2 .
+    CLASS-METHODS create_by_bdc_table
+      IMPORTING
+        !it_bdc_messages    TYPE gtt_bdc_messages
+        !iv_restartable_ind TYPE abap_bool DEFAULT abap_false
+      RETURNING
+        VALUE(rx_return)    TYPE REF TO zcx_return2 .
+    CLASS-METHODS create_by_text
+      IMPORTING
+        !iv_type         TYPE bapi_mtype DEFAULT 'E'
+        !iv_message      TYPE bapi_msg
+        !iv_variable_1   TYPE symsgv OPTIONAL
+        !iv_variable_2   TYPE symsgv OPTIONAL
+        !iv_variable_3   TYPE symsgv OPTIONAL
+        !iv_variable_4   TYPE symsgv OPTIONAL
+      RETURNING
+        VALUE(rx_return) TYPE REF TO zcx_return2 .
+    METHODS get_bapiret2_struc
+      RETURNING
+        VALUE(rs_bapiret2) TYPE bapiret2 .
+    METHODS get_bapiret2_table
+      RETURNING
+        VALUE(rt_bapiret2) TYPE bapiret2_t .
+    METHODS add_system_message
+      IMPORTING
+        !iv_field_name TYPE bapi_fld OPTIONAL .
+    METHODS add_message_and_text_var
+      IMPORTING
+        !iv_type          TYPE bapi_mtype
+        !iv_id            TYPE symsgid
+        !iv_number        TYPE symsgno
+        !iv_text_variable TYPE char200 .
+    METHODS add_bapireturn_struc
+      IMPORTING
+        !is_bapireturn TYPE bapireturn .
+    METHODS add_bapireturn_table
+      IMPORTING
+        !it_return TYPE gtt_bapireturn_t .
+    METHODS add_bapiret1_struc
+      IMPORTING
+        !is_return TYPE bapiret1 .
+    METHODS add_bapiret1_table
+      IMPORTING
+        !it_return TYPE bapiret1_tab .
+    METHODS add_bapiret2_struc
+      IMPORTING
+        !is_return TYPE bapiret2 .
+    METHODS add_bapiret2_table
+      IMPORTING
+        !it_return TYPE bapiret2_t .
+    METHODS add_by_text
+      IMPORTING
+        !iv_type       TYPE bapi_mtype DEFAULT 'E'
+        !iv_message    TYPE bapi_msg
+        !iv_variable_1 TYPE symsgv
+        !iv_variable_2 TYPE symsgv
+        !iv_variable_3 TYPE symsgv
+        !iv_variable_4 TYPE symsgv .
+    METHODS raise_exception
+      RAISING
+        zcx_return2 .
 
-  METHODS if_message~get_longtext
-    REDEFINITION .
-  METHODS if_message~get_text
-    REDEFINITION .
-PROTECTED SECTION.
+    METHODS if_message~get_longtext
+        REDEFINITION .
+    METHODS if_message~get_text
+        REDEFINITION .
+  PROTECTED SECTION.
 
-  DATA gt_return TYPE bapiret2_t .
+    DATA gt_return TYPE bapiret2_t .
 
-  CLASS-METHODS map_text_var_to_bapiret2
-    IMPORTING
-      !iv_type TYPE bapi_mtype
-      !iv_id TYPE symsgid
-      !iv_number TYPE symsgno
-      !iv_text TYPE char200
-    RETURNING
-      VALUE(rs_bapiret2) TYPE bapiret2 .
-  CLASS-METHODS map_bapireturn_to_bapiret2
-    IMPORTING
-      !is_bapireturn TYPE bapireturn
-    RETURNING
-      VALUE(rs_bapiret2) TYPE bapiret2 .
-  CLASS-METHODS map_bapiret1_to_bapiret2
-    IMPORTING
-      !is_bapireturn TYPE bapiret1
-    RETURNING
-      VALUE(rs_bapiret2) TYPE bapiret2 .
-  CLASS-METHODS map_bdc_to_bapiret2
-    IMPORTING
-      !is_bdc_message TYPE bdcmsgcoll
-    RETURNING
-      VALUE(rs_bapiret2) TYPE bapiret2 .
-  CLASS-METHODS check_has_messages
-    IMPORTING
-      !ix_return TYPE REF TO zcx_return2
-    RETURNING
-      VALUE(rx_return) TYPE REF TO zcx_return2 .
+    CLASS-METHODS map_text_var_to_bapiret2
+      IMPORTING
+        !iv_type           TYPE bapi_mtype
+        !iv_id             TYPE symsgid
+        !iv_number         TYPE symsgno
+        !iv_text           TYPE char200
+      RETURNING
+        VALUE(rs_bapiret2) TYPE bapiret2 .
+    CLASS-METHODS map_bapireturn_to_bapiret2
+      IMPORTING
+        !is_bapireturn     TYPE bapireturn
+      RETURNING
+        VALUE(rs_bapiret2) TYPE bapiret2 .
+    CLASS-METHODS map_bapiret1_to_bapiret2
+      IMPORTING
+        !is_bapireturn     TYPE bapiret1
+      RETURNING
+        VALUE(rs_bapiret2) TYPE bapiret2 .
+    CLASS-METHODS map_bdc_to_bapiret2
+      IMPORTING
+        !is_bdc_message    TYPE bdcmsgcoll
+      RETURNING
+        VALUE(rs_bapiret2) TYPE bapiret2 .
+    CLASS-METHODS check_has_messages
+      IMPORTING
+        !ix_return       TYPE REF TO zcx_return2
+      RETURNING
+        VALUE(rx_return) TYPE REF TO zcx_return2 .
   PRIVATE SECTION.
 
 ENDCLASS.
@@ -197,7 +202,24 @@ CLASS zcx_return2 IMPLEMENTATION.
 
     IF is_return-type CA 'EAX'.
 
-      APPEND is_return TO gt_return.
+      DATA(ls_return) = is_return.
+
+      IF ls_return-id IS NOT INITIAL.
+
+        MESSAGE
+          ID     ls_return-id
+          TYPE   ls_return-type
+          NUMBER ls_return-number
+          WITH
+            ls_return-message_v1
+            ls_return-message_v2
+            ls_return-message_v3
+            ls_return-message_v4
+          INTO ls_return-message.
+
+      ENDIF.
+
+      APPEND ls_return TO gt_return.
 
     ENDIF.
 
@@ -234,20 +256,6 @@ CLASS zcx_return2 IMPLEMENTATION.
       add_bapireturn_struc( <ls_return> ).
 
     ENDLOOP.
-
-  ENDMETHOD.
-
-
-  METHOD add_message_and_text_var.
-
-    DATA(ls_bapiret2) =
-      map_text_var_to_bapiret2(
-        iv_type           = iv_type
-        iv_id             = iv_id
-        iv_number         = iv_number
-        iv_text           = iv_text_variable ).
-
-    me->add_bapiret2_struc( ls_bapiret2 ).
 
   ENDMETHOD.
 
@@ -306,20 +314,24 @@ CLASS zcx_return2 IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD add_message_and_text_var.
+
+    DATA(ls_bapiret2) =
+      map_text_var_to_bapiret2(
+        iv_type           = iv_type
+        iv_id             = iv_id
+        iv_number         = iv_number
+        iv_text           = iv_text_variable ).
+
+    me->add_bapiret2_struc( ls_bapiret2 ).
+
+  ENDMETHOD.
+
+
   METHOD add_system_message.
 
     DATA:
       ls_return TYPE bapiret2.
-
-    MESSAGE ID sy-msgid
-      TYPE sy-msgty
-      NUMBER sy-msgno
-      WITH
-        sy-msgv1
-        sy-msgv2
-        sy-msgv3
-        sy-msgv4
-      INTO ls_return-message.
 
     ls_return-type        = sy-msgty.
     ls_return-id          = sy-msgid.
@@ -440,6 +452,45 @@ CLASS zcx_return2 IMPLEMENTATION.
     ENDLOOP.
 
     rx_return  = create_by_bapiret2_table( lt_bapiret2 ).
+
+  ENDMETHOD.
+
+
+  METHOD create_by_exception_object.
+
+    "********************************************************
+    "Split message text string into variables of length 50
+
+    DATA(lv_text) = ir_exception_object->get_text( ).
+
+    DATA:
+      BEGIN OF ls_variables,
+        msgv1(50),
+        msgv2(50),
+        msgv3(50),
+        msgv4(50),
+      END OF ls_variables.
+
+    ls_variables = lv_text.
+
+    "********************************************************
+    "Add message
+
+    DATA:
+      ls_bapiret2 TYPE bapiret2.
+
+    ls_bapiret2-type        = sy-msgty.
+    ls_bapiret2-id          = sy-msgid.
+    ls_bapiret2-number      = sy-msgno.
+
+    ls_bapiret2-message_v1  = ls_variables-msgv1.
+    ls_bapiret2-message_v2  = ls_variables-msgv2.
+    ls_bapiret2-message_v3  = ls_variables-msgv3.
+    ls_bapiret2-message_v4  = ls_variables-msgv4.
+
+    rx_return = NEW #( ).
+
+    rx_return->add_bapiret2_struc( ls_bapiret2 ).
 
   ENDMETHOD.
 
@@ -662,19 +713,6 @@ CLASS zcx_return2 IMPLEMENTATION.
       ENDCASE.
 
     ENDLOOP.
-
-    "***************************************************
-    "Generate message
-    "***************************************************
-
-    MESSAGE
-      ID rs_bapiret2-id TYPE rs_bapiret2-type NUMBER rs_bapiret2-number
-      WITH
-        rs_bapiret2-message_v1
-        rs_bapiret2-message_v2
-        rs_bapiret2-message_v3
-        rs_bapiret2-message_v4
-      INTO rs_bapiret2-message.
 
   ENDMETHOD.
 
