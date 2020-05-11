@@ -20,6 +20,7 @@ CLASS zcx_return DEFINITION
     DATA gs_return TYPE bapiret2 READ-ONLY .
     DATA gs_position TYPE gts_position .
 
+
     METHODS constructor
       IMPORTING
         !textid      LIKE textid OPTIONAL
