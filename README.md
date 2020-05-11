@@ -8,8 +8,8 @@ This is a generic ABAP Exception Handling class which combines the good old SAP 
 For more information.
 See SAP blog: <todo>
   
-# ZCA_ZCX_RETURN2_PATTERNS.abap
-This program contains all code patterns (a.k.a snippets or templates) for adding quickly error handling code.
+# ZCA_ZCX_RETURN2_TEMPLATES.abap
+This program contains all code templates (a.k.a snippets or patterns) for adding quickly error handling code.
 
 # ZCA_ZCX_RETURN2_UNIT_TEST.abap
 This ABAP program executes the unit tests for class ZCX_RETURN2.
