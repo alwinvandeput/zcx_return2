@@ -1,16 +1,5 @@
 REPORT zca_zcx_return2_patterns MESSAGE-ID 00.
 
-*    METHODS sc010_create_system_message      FOR TESTING.
-*    METHODS sc020_create_system_message_2    FOR TESTING.
-*    METHODS sc030_create_mess_and_text_var   FOR TESTING.
-*    METHODS sc040_create_bapireturn_struc    FOR TESTING.
-*    METHODS sc050_create_bapireturn_table    FOR TESTING.
-*    METHODS sc060_create_by_bapiret1_struc   FOR TESTING.
-*    METHODS sc070_create_by_bapiret1_table   FOR TESTING.
-*    METHODS sc080_create_by_bapiret2_struc   FOR TESTING.
-*    METHODS sc090_create_by_bapiret2_table   FOR TESTING.
-*    METHODS sc091_create_by_bapiret2_table   FOR TESTING.
-
 CLASS zz_zcx_return2_pattern DEFINITION.
 
   PUBLIC SECTION.
@@ -23,16 +12,18 @@ CLASS zz_zcx_return2_pattern DEFINITION.
     METHODS z060_zexc_bapiret1_tab    RAISING zcx_return2.
     METHODS z070_zexc_bapiret2_struc  RAISING zcx_return2.
     METHODS z080_zexc_bapiret2_tab    RAISING zcx_return2.
+    METHODS z085_zexc_bdc_mess_table  RAISING zcx_return2.
     METHODS z090_zexc_oo_exception    RAISING zcx_return2.
+    METHODS z090_zexc_text_do_not_use RAISING zcx_return2.
 
-    METHODS c010_zexc_db_transaction  RAISING zcx_return2.
+    METHODS c010_zexc_catch_oo        RAISING zcx_return2.
     METHODS c020_zexc_catch_gateway   RAISING /iwbep/cx_mgw_busi_exception.
+    METHODS c025_zexc_catch_abap_prox.
     METHODS c030_zexc_catch_rfc       EXCEPTIONS error.
     METHODS c040_zexc_catch_bapi
       EXPORTING et_return TYPE bapiret2_t.
-    METHODS c050_zexc_catch_abap_prox.
     METHODS c060_zexc_catch_message.
-    METHODS c999_zexc_catch_old_retur.
+    METHODS c999_zexc_catch_old_retur RAISING zcx_return2.
 
 ENDCLASS.
 
@@ -52,7 +43,7 @@ CLASS zz_zcx_return2_pattern IMPLEMENTATION.
     IF sy-subrc <> 0.
 
       "<English message text>
-      MESSAGE e000
+      MESSAGE e001
         "WITH iv_<variable>
         INTO DATA(lv_dummy) ##NEEDED.
 
@@ -161,6 +152,26 @@ CLASS zz_zcx_return2_pattern IMPLEMENTATION.
 
   ENDMETHOD.
 
+  METHOD z085_zexc_bdc_mess_table.
+
+    DATA lt_bdc_messages  TYPE zcx_return2=>gtt_bdc_messages.
+
+*    CALL TRANSACTION '???'
+*      USING lt_bdcdata
+*      MODE '?'
+*      UPDATE '?'
+*      MESSAGES INTO lt_bdc_messages.
+
+    DATA(lx_return) =
+      zcx_return2=>create_by_bdc_table(
+        it_bdc_messages = lt_bdc_messages ).
+
+    IF lx_return IS NOT INITIAL.
+      RAISE EXCEPTION lx_return.
+    ENDIF.
+
+  ENDMETHOD.
+
   METHOD z090_zexc_oo_exception.
 
     TRY.
@@ -183,11 +194,27 @@ CLASS zz_zcx_return2_pattern IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD c010_zexc_db_transaction.
+  METHOD z090_zexc_text_do_not_use.
+
+    DATA(lr_return) =
+      zcx_return2=>create_by_text(
+        iv_type        = 'E'
+        iv_message     = 'Do not used &1 &2 &3 and &4'
+        iv_variable_1  = 'A'
+        iv_variable_2  = 'B'
+        iv_variable_3  = 'C'
+        iv_variable_4  = 'D'
+       ).
+
+    RAISE EXCEPTION lr_return.
+
+  ENDMETHOD.
+
+  METHOD c010_zexc_catch_oo.
 
     TRY.
 
-        "Execute Business Object CRUD methods
+        "Execute methods
         "...
 
         "Commit
@@ -198,7 +225,7 @@ CLASS zz_zcx_return2_pattern IMPLEMENTATION.
         "zca_db_transaction->roll_back( ).
 
         "Handle exception lx_return
-        ...
+        RAISE EXCEPTION lx_return.
 
     ENDTRY.
 
@@ -221,15 +248,15 @@ CLASS zz_zcx_return2_pattern IMPLEMENTATION.
         "Handle exception
         DATA(ls_return) = lx_return->get_bapiret2_struc( ).
 
-        DATA(ls_message) = VALUE scx_t100key(   "TODO: is this okay?
+        DATA(ls_message) = VALUE scx_t100key(
           msgid = ls_return-id
           msgno = ls_return-number
-          attr1 = ls_return-message
-          attr2 = ''
-          attr3 = ''
-          attr4 = '' ).
+          attr1 = ls_return-message_v1
+          attr2 = ls_return-message_v2
+          attr3 = ls_return-message_v3
+          attr4 = ls_return-message_v4 ).
 
-        RAISE EXCEPTION TYPE /iwbep/cx_mgw_busi_exception "TODO: change
+        RAISE EXCEPTION TYPE /iwbep/cx_mgw_busi_exception
           EXPORTING
             textid = ls_message.
 
@@ -288,7 +315,7 @@ CLASS zz_zcx_return2_pattern IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD c050_zexc_catch_abap_prox.
+  METHOD c025_zexc_catch_abap_prox.
 
     TRY.
 
@@ -345,13 +372,9 @@ CLASS zz_zcx_return2_pattern IMPLEMENTATION.
 
       CATCH zcx_return2 INTO DATA(lx_return). "TODO: rename zcx_return2
 
-        "DATA(lt_bapiret2) = lx_return->get_bapiret2_t( ).
+        DATA(lx_return2) = zcx_return2=>create_by_bapiret2_table( lx_return->get_bapiret2_table( )  ).
 
-        "DATA(lt_bapiret2) = lx_return->gt_return.            "TODO: activate
-
-        DATA(lt_bapiret2) = lx_return->get_bapiret2_table( ). "TODO: delete
-
-        DATA(lx_return2) = zcx_return2=>create_by_bapiret2_table( lt_bapiret2  ).
+        RAISE EXCEPTION lx_return2.
 
     ENDTRY.
 
