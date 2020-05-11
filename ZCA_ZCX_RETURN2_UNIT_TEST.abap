@@ -530,21 +530,21 @@ CLASS unit_test IMPLEMENTATION.
         type        = 'E'
         id          = ''
         number      = '000'
-        message     = 'Entry 1 2 3 does not exist in 4 (check entry)'
-        message_v1  = '1'
-        message_v2  = '2'
-        message_v3  = '3'
-        message_v4  = '4'
+        message     = 'Entry A B C does not exist in D (check entry)'
+        message_v1  = 'A'
+        message_v2  = 'B'
+        message_v3  = 'C'
+        message_v4  = 'D'
       )
     ).
 
     DATA(lx_return) = zcx_return2=>create_by_text(
       iv_type       = 'E'
       iv_message    = 'Entry &1 &2 &3 does not exist in &4 (check entry)'
-      iv_variable_1 = '1'
-      iv_variable_2 = '2'
-      iv_variable_3 = '3'
-      iv_variable_4 = '4'
+      iv_variable_1 = 'A'
+      iv_variable_2 = 'B'
+      iv_variable_3 = 'C'
+      iv_variable_4 = 'D'
     ).
 
     DATA(lt_act_bapiret2) = lx_return->get_bapiret2_table( ).
